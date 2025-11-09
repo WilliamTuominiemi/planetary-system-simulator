@@ -1,3 +1,5 @@
+![Tests](https://github.com/WilliamTuominiemi/planetary-system-simulator/actions/workflows/main.yml/badge.svg)
+
 ![demo](demo.gif)
 
 Run program
