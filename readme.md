@@ -1,3 +1,7 @@
 ![demo](demo.gif)
 
+Run program
 `g++ -std=c++17 -Isrc src/physics.cpp main.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system && ./main`
+
+Run unit tests
+`g++ -std=c++17 -Isrc src/physics.cpp tests/test_physics.cpp -o test_runner -lsfml-graphics -lsfml-window -lsfml-system && ./test_runner`
