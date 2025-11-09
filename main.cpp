@@ -1,17 +1,5 @@
+#include "src/physics.hpp"
 #include <SFML/Graphics.hpp>
-#include <cmath>
-
-sf::Vector2f direction(sf::Vector2f from, sf::Vector2f to) {
-    float deltaX = to.x - from.x;
-    float deltaY = to.y - from.y;
-
-    float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
-    return (1 / distance) * (from - to);
-}
-
-sf::Vector2f orbitDirection(sf::Vector2f dir) {
-    return {dir.y, -dir.x};
-}
 
 int main() {
     int windowWidth = 800;
