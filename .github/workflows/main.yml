@@ -1,0 +1,27 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsfml-dev
+    
+    - name: Download Catch2 header
+      run: |
+        mkdir -p tests
+        wget https://raw.githubusercontent.com/catchorg/Catch2/v2.13.10/single_include/catch2/catch.hpp -O tests/catch.hpp
+    
+    - name: Build tests
+      run: |
+        g++ -std=c++17 -Isrc src/physics.cpp tests/test_physics.cpp -o test_runner -lsfml-graphics -lsfml-window -lsfml-system
+    
+    - name: Run tests
+      run: ./test_runner
