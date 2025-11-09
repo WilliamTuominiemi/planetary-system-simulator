@@ -1,11 +1,17 @@
 #include <SFML/Graphics.hpp>
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Planetary system");
+    int windowWidth = 800;
+    int windowHeight = 800;
+
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Planetary system");
     window.setFramerateLimit(60);
 
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::White);
+
+    float starRadius = 50.f;
+    sf::CircleShape star(starRadius);
+    star.setOrigin(starRadius, starRadius);
+    star.setPosition(windowWidth / 2.f, windowHeight / 2.f);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -15,7 +21,7 @@ int main() {
         }
 
         window.clear();
-        window.draw(shape);
+        window.draw(star);
         window.display();
     }
 
