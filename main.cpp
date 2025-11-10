@@ -1,5 +1,6 @@
 #include "src/physics.hpp"
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 int main()
 {
@@ -11,6 +12,9 @@ int main()
     sf::Clock clock;
     float dt = 0.016f;
     float lastTime = 0.f;
+
+    sf::View view = window.getDefaultView();
+    window.setView(view);
 
     float starRadius = 50.f;
     float starMass = 5000.f;
@@ -38,7 +42,21 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
                 window.close();
+            }
+            if (event.type == sf::Event::MouseWheelScrolled)
+            {
+                if (event.mouseWheelScroll.delta == 1)
+                {
+                    view.zoom(0.95);
+                }
+                else
+                {
+                    view.zoom(1.1);
+                }
+                window.setView(view);
+            }
         }
 
         sf::Vector2f acceleration = gravity(planetPosition, starPosition, 1.f, starMass);
