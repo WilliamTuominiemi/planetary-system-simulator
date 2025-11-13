@@ -18,10 +18,15 @@ jobs:
       run: |
         mkdir -p tests
         wget https://raw.githubusercontent.com/catchorg/Catch2/v2.13.10/single_include/catch2/catch.hpp -O tests/catch.hpp
-    
-    - name: Build tests
+        
+    - name: Configure CMake
       run: |
-        g++ -std=c++17 -Isrc src/physics.cpp src/controller.cpp tests/test_physics.cpp tests/test_controller.cpp -o test_runner -lsfml-graphics -lsfml-window -lsfml-system
+        mkdir build
+        cd build
+        cmake ..
+
+    - name: Build
+      run: cmake --build build
     
     - name: Run tests
-      run: ./test_runner
+      run: ./build/test_runner

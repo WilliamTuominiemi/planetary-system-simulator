@@ -1,2 +1,7 @@
 main
 test_runner
+build/
+*.o
+*.exe
+test_runner
+simulation
