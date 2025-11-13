@@ -16,19 +16,29 @@ int main()
     sf::View view = window.getDefaultView();
     window.setView(view);
 
-    float starRadius = 50.f;
+    float starRadius = 40.f;
     float starMass = 5000.f;
     sf::Vector2f starPosition(windowWidth / 2.f, windowHeight / 2.f);
     sf::CircleShape star(starRadius);
     star.setOrigin(starRadius, starRadius);
     star.setPosition(starPosition);
+    star.setFillColor(sf::Color::Yellow);
 
     float planetRadius = 10.f;
-    float planetMass = 1.f;
+    float planetMass = 250.f;
     sf::Vector2f planetPosition(windowWidth / 2.f, windowHeight / 4.f);
     sf::CircleShape planet(planetRadius);
     planet.setOrigin(planetRadius, planetRadius);
     sf::Vector2f planetVelocity = orbitalVelocity(planetPosition, starPosition, starMass);
+    planet.setFillColor(sf::Color::Blue);
+
+    float moonRadius = 5.f;
+    float moonMass = 1.f;
+    sf::Vector2f moonOffset = {0, planetRadius * 3};
+    sf::Vector2f moonPosition = planetPosition + moonOffset;
+    sf::CircleShape moon(moonRadius);
+    moon.setOrigin(moonRadius, moonRadius);
+    sf::Vector2f moonVelocity = planetVelocity + orbitalVelocity(moonPosition, planetPosition, planetMass);
 
     while (window.isOpen())
     {
@@ -53,21 +63,29 @@ int main()
                 }
                 else
                 {
-                    view.zoom(1.1);
+                    view.zoom(1.05);
                 }
                 window.setView(view);
             }
         }
 
-        sf::Vector2f acceleration = gravity(planetPosition, starPosition, 1.f, starMass);
-        planetVelocity += acceleration * dt;
+        sf::Vector2f planetAcceleration = gravity(planetPosition, starPosition, 1.f, starMass);
+        planetVelocity += planetAcceleration * dt;
         planetPosition += planetVelocity * dt;
+
+        sf::Vector2f moonAcceleration = gravity(moonPosition, planetPosition, moonMass, planetMass);
+        moonVelocity += planetAcceleration * dt;
+        moonVelocity += moonAcceleration * dt;
+        moonPosition += moonVelocity * dt;
+
+        planet.setPosition(planetPosition);
+        moon.setPosition(moonPosition);
 
         window.clear();
 
         window.draw(star);
-        planet.setPosition(planetPosition);
         window.draw(planet);
+        window.draw(moon);
 
         window.display();
     }
