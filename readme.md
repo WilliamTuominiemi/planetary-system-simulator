@@ -2,8 +2,26 @@
 
 ![demo](demo.gif)
 
-Run program
-`g++ -std=c++17 -Isrc src/physics.cpp src/controller.cpp main.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system && ./main`
+## Build and Run
 
-Run unit tests
-`g++ -std=c++17 -Isrc src/physics.cpp src/controller.cpp tests/test_physics.cpp tests/test_controller.cpp -o test_runner -lsfml-graphics -lsfml-window -lsfml-system && ./test_runner`
+### First-time setup
+```bash
+mkdir build
+cd build
+cmake ..
+```
+
+### Build
+```bash
+cmake --build build
+```
+
+### Run program
+```bash
+./build/simulation
+```
+
+### Run unit tests
+```bash
+./build/test_runner
+```
