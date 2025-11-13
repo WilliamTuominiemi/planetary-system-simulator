@@ -21,7 +21,7 @@ jobs:
     
     - name: Build tests
       run: |
-        g++ -std=c++17 -Isrc src/physics.cpp tests/test_physics.cpp -o test_runner -lsfml-graphics -lsfml-window -lsfml-system
+        g++ -std=c++17 -Isrc src/physics.cpp src/controller.cpp tests/test_physics.cpp tests/test_controller.cpp -o test_runner -lsfml-graphics -lsfml-window -lsfml-system
     
     - name: Run tests
       run: ./test_runner

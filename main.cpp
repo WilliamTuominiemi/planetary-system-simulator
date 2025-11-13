@@ -1,4 +1,5 @@
 #include "src/physics.hpp"
+#include "src/controller.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -6,7 +7,7 @@ int main()
 {
     int windowWidth = 800;
     int windowHeight = 800;
-    int windowMoveSpeed = 5.f;
+    float windowMoveSpeed = 5.f;
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Planetary system");
     window.setFramerateLimit(60);
@@ -58,34 +59,12 @@ int main()
             }
             if (event.type == sf::Event::MouseWheelScrolled)
             {
-                if (event.mouseWheelScroll.delta == 1)
-                {
-                    view.zoom(0.95);
-                }
-                else
-                {
-                    view.zoom(1.05);
-                }
+                view.zoom(zoom(event));
                 window.setView(view);
             }
             if (event.type == sf::Event::KeyPressed)
             {
-                if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up)
-                {
-                    view.move({0, -windowMoveSpeed});
-                }
-                if (event.key.code == sf::Keyboard::D || event.key.code == sf::Keyboard::Right)
-                {
-                    view.move({windowMoveSpeed, 0});
-                }
-                if (event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down)
-                {
-                    view.move({0, windowMoveSpeed});
-                }
-                if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left)
-                {
-                    view.move({-windowMoveSpeed, 0});
-                }
+                view.move(move(event) * windowMoveSpeed);
                 window.setView(view);
             }
         }
