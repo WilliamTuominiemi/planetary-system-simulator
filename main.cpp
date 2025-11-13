@@ -1,5 +1,6 @@
 #include "src/physics.hpp"
 #include "src/controller.hpp"
+#include "src/celestial.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -18,29 +19,23 @@ int main()
     sf::View view = window.getDefaultView();
     window.setView(view);
 
-    float starRadius = 40.f;
     float starMass = 5000.f;
+    float starRadius = 40.f;
     sf::Vector2f starPosition(windowWidth / 2.f, windowHeight / 2.f);
-    sf::CircleShape star(starRadius);
-    star.setOrigin(starRadius, starRadius);
-    star.setPosition(starPosition);
-    star.setFillColor(sf::Color::Yellow);
+    Celestial star(starMass, starRadius, starPosition, sf::Color::Yellow);
 
     float planetRadius = 10.f;
     float planetMass = 250.f;
     sf::Vector2f planetPosition(windowWidth / 2.f, windowHeight / 4.f);
-    sf::CircleShape planet(planetRadius);
-    planet.setOrigin(planetRadius, planetRadius);
-    sf::Vector2f planetVelocity = orbitalVelocity(planetPosition, starPosition, starMass);
-    planet.setFillColor(sf::Color::Blue);
+    Celestial planet(planetMass, planetRadius, planetPosition, sf::Color::Blue);
+    planet.accelerate(orbitalVelocity(planetPosition, starPosition, starMass));
 
     float moonRadius = 5.f;
     float moonMass = 1.f;
     sf::Vector2f moonOffset = {0, planetRadius * 3};
     sf::Vector2f moonPosition = planetPosition + moonOffset;
-    sf::CircleShape moon(moonRadius);
-    moon.setOrigin(moonRadius, moonRadius);
-    sf::Vector2f moonVelocity = planetVelocity + orbitalVelocity(moonPosition, planetPosition, planetMass);
+    Celestial moon(moonMass, moonRadius, moonPosition, sf::Color::White);
+    moon.accelerate(planet.getVelocity() + orbitalVelocity(moonPosition, planetPosition, planetMass));
 
     while (window.isOpen())
     {
@@ -69,23 +64,27 @@ int main()
             }
         }
 
+        planetPosition = planet.getPosition();
+        moonPosition = moon.getPosition();
+
         sf::Vector2f planetAcceleration = gravity(planetPosition, starPosition, 1.f, starMass);
-        planetVelocity += planetAcceleration * dt;
-        planetPosition += planetVelocity * dt;
+        planet.accelerate(planetAcceleration * dt);
+        planet.move(dt);
 
-        sf::Vector2f moonAcceleration = gravity(moonPosition, planetPosition, moonMass, planetMass);
-        moonVelocity += planetAcceleration * dt;
-        moonVelocity += moonAcceleration * dt;
-        moonPosition += moonVelocity * dt;
+        sf::Vector2f moonAcceleration = gravity(moonPosition, planet.getPosition(), moonMass, planetMass);
 
-        planet.setPosition(planetPosition);
-        moon.setPosition(moonPosition);
+        moon.accelerate(planetAcceleration * dt);
+        moon.accelerate(moonAcceleration * dt);
+        moon.move(dt);
+
+        planet.setShapePosition();
+        moon.setShapePosition();
 
         window.clear();
 
-        window.draw(star);
-        window.draw(planet);
-        window.draw(moon);
+        window.draw(star.getShape());
+        window.draw(planet.getShape());
+        window.draw(moon.getShape());
 
         window.display();
     }

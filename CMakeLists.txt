@@ -10,6 +10,7 @@ find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 add_executable(simulation
     src/physics.cpp
     src/controller.cpp
+    src/celestial.cpp
     main.cpp
 )
 target_include_directories(simulation PRIVATE src)
