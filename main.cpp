@@ -22,19 +22,22 @@ int main()
     float starMass = 5000.f;
     float starRadius = 40.f;
     sf::Vector2f starPosition(windowWidth / 2.f, windowHeight / 2.f);
-    Celestial star(starMass, starRadius, starPosition, sf::Color::Yellow);
+    sf::Color starColor(255, 239, 209);
+    Celestial star(starMass, starRadius, starPosition, starColor);
 
     float planetRadius = 10.f;
     float planetMass = 250.f;
     sf::Vector2f planetPosition(windowWidth / 2.f, windowHeight / 4.f);
-    Celestial planet(planetMass, planetRadius, planetPosition, sf::Color::Blue);
+    sf::Color planetColor(115, 193, 222);
+    Celestial planet(planetMass, planetRadius, planetPosition, planetColor);
     planet.accelerate(orbitalVelocity(planetPosition, starPosition, starMass));
 
     float moonRadius = 5.f;
     float moonMass = 1.f;
     sf::Vector2f moonOffset = {0, planetRadius * 3};
     sf::Vector2f moonPosition = planetPosition + moonOffset;
-    Celestial moon(moonMass, moonRadius, moonPosition, sf::Color::White);
+    sf::Color moonColor(155, 161, 163);
+    Celestial moon(moonMass, moonRadius, moonPosition, moonColor);
     moon.accelerate(planet.getVelocity() + orbitalVelocity(moonPosition, planetPosition, planetMass));
 
     while (window.isOpen())
