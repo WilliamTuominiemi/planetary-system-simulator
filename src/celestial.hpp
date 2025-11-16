@@ -21,7 +21,7 @@ public:
     Celestial(float mass, float radius, sf::Vector2f position, sf::Color color);
 
     // Methods
-    void accelerate(sf::Vector2f acceleration);
+    void accelerate(sf::Vector2f acceleration, float dt);
     void move(float dt);
 
     // Getters/Setters
@@ -31,6 +31,7 @@ public:
     float getMass();
     std::vector<Celestial> &getSatellites();
 
+    void setVelocity(sf::Vector2f newVelocity);
     void setShapePosition();
     void setSatellite(Celestial satellite);
 };

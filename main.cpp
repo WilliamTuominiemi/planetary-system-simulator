@@ -10,10 +10,10 @@ std::vector<sf::CircleShape> accelerateSatellites(Celestial &celestial, const sf
 
     for (Celestial &satellite : celestial.getSatellites())
     {
-        sf::Vector2f satelliteAcceleration = gravity(satellite.getPosition(), celestial.getPosition(), satellite.getMass(), celestial.getMass());
+        sf::Vector2f satelliteAcceleration = gravity(satellite.getPosition(), celestial.getPosition(), celestial.getMass());
 
-        satellite.accelerate(celestialAcceleration * dt);
-        satellite.accelerate(satelliteAcceleration * dt);
+        satellite.accelerate(celestialAcceleration, dt);
+        satellite.accelerate(satelliteAcceleration, dt);
         satellite.move(dt);
         satellite.setShapePosition();
 
@@ -51,7 +51,7 @@ int main()
     sf::Vector2f planetPosition(windowWidth / 2.f, windowHeight / 4.f);
     sf::Color planetColor(115, 193, 222);
     Celestial planet(planetMass, planetRadius, planetPosition, planetColor);
-    planet.accelerate(orbitalVelocity(planetPosition, starPosition, starMass));
+    planet.setVelocity(orbitalVelocity(planetPosition, starPosition, starMass));
 
     float moonRadius = 5.f;
     float moonMass = 1.f;
@@ -59,7 +59,7 @@ int main()
     sf::Vector2f moonPosition = planetPosition + moonOffset;
     sf::Color moonColor(155, 161, 163);
     Celestial moon(moonMass, moonRadius, moonPosition, moonColor);
-    moon.accelerate(planet.getVelocity() + orbitalVelocity(moonPosition, planetPosition, planetMass));
+    moon.setVelocity(planet.getVelocity() + orbitalVelocity(moonPosition, planetPosition, planetMass));
 
     planet.setSatellite(moon);
     star.setSatellite(planet);

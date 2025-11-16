@@ -12,9 +12,9 @@ Celestial::Celestial(float mass, float radius, sf::Vector2f position, sf::Color 
     shape.setFillColor(color);
 }
 
-void Celestial::accelerate(sf::Vector2f acceleration)
+void Celestial::accelerate(sf::Vector2f acceleration, float dt)
 {
-    velocity += acceleration;
+    velocity += acceleration * dt;
 }
 
 void Celestial::move(float dt)
@@ -45,6 +45,11 @@ float Celestial::getMass()
 std::vector<Celestial> &Celestial::getSatellites()
 {
     return satellites;
+}
+
+void Celestial::setVelocity(sf::Vector2f newVelocity)
+{
+    velocity = newVelocity;
 }
 
 void Celestial::setShapePosition()

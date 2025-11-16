@@ -34,7 +34,6 @@ sf::Vector2f orbitDirection(sf::Vector2f dir);
 sf::Vector2f gravity(
     sf::Vector2f smallerPosition,
     sf::Vector2f biggerPosition,
-    float smallerMass,
     float biggerMass);
 
 /**

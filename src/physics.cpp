@@ -19,8 +19,8 @@ sf::Vector2f positionDelta(sf::Vector2f from, sf::Vector2f to)
 
 sf::Vector2f direction(sf::Vector2f from, sf::Vector2f to)
 {
-    sf::Vector2f delta = to - from;
-    float dist = std::sqrt(delta.x * delta.x + delta.y * delta.y);
+    sf::Vector2f delta = positionDelta(from, to);
+    float dist = distance(squaredDistance(delta));
 
     if (dist == 0.f)
         return {0.f, 0.f};
@@ -35,7 +35,6 @@ sf::Vector2f orbitDirection(sf::Vector2f dir)
 sf::Vector2f gravity(
     sf::Vector2f smallerPosition,
     sf::Vector2f biggerPosition,
-    float smallerMass,
     float biggerMass)
 {
     sf::Vector2f delta = positionDelta(smallerPosition, biggerPosition);
@@ -57,14 +56,14 @@ sf::Vector2f orbitalVelocity(
     sf::Vector2f biggerPosition,
     float biggerMass)
 {
-    sf::Vector2f delta = positionDelta(biggerPosition, smallerPosition);
+    sf::Vector2f delta = positionDelta(smallerPosition, biggerPosition);
     float dSquared = squaredDistance(delta);
     float dist = distance(dSquared);
 
     if (dist < 20.f)
         return {0.f, 0.f};
 
-    sf::Vector2f dir = direction(biggerPosition, smallerPosition);
+    sf::Vector2f dir = direction(smallerPosition, biggerPosition);
     sf::Vector2f orbitalDir = orbitDirection(dir);
 
     float orbitalSpeed = std::sqrt(G * biggerMass / dist);

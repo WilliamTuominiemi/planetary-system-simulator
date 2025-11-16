@@ -245,7 +245,7 @@ TEST_CASE("gravity calculates correct acceleration", "[gravity]")
     {
         sf::Vector2f smaller = {0.f, 0.f};
         sf::Vector2f bigger = {100.f, 0.f};
-        sf::Vector2f accel = gravity(smaller, bigger, 1.f, 1000.f);
+        sf::Vector2f accel = gravity(smaller, bigger, 1000.f);
 
         // Force should point toward the bigger object (positive x direction)
         REQUIRE(accel.x > 0.f);
@@ -260,7 +260,7 @@ TEST_CASE("gravity calculates correct acceleration", "[gravity]")
     {
         sf::Vector2f smaller = {0.f, 0.f};
         sf::Vector2f bigger = {0.f, 50.f};
-        sf::Vector2f accel = gravity(smaller, bigger, 1.f, 500.f);
+        sf::Vector2f accel = gravity(smaller, bigger, 500.f);
 
         // Force should point toward the bigger object (positive y direction)
         REQUIRE(accel.x == Approx(0.f));
@@ -275,7 +275,7 @@ TEST_CASE("gravity calculates correct acceleration", "[gravity]")
     {
         sf::Vector2f smaller = {0.f, 0.f};
         sf::Vector2f bigger = {30.f, 40.f}; // distance = 50
-        sf::Vector2f accel = gravity(smaller, bigger, 1.f, 2500.f);
+        sf::Vector2f accel = gravity(smaller, bigger, 2500.f);
 
         // Force should point toward bigger object
         REQUIRE(accel.x > 0.f);
@@ -294,24 +294,11 @@ TEST_CASE("gravity calculates correct acceleration", "[gravity]")
     {
         sf::Vector2f smaller = {100.f, 0.f};
         sf::Vector2f bigger = {0.f, 0.f};
-        sf::Vector2f accel = gravity(smaller, bigger, 1.f, 1000.f);
+        sf::Vector2f accel = gravity(smaller, bigger, 1000.f);
 
         // Force should point toward the bigger object (negative x direction)
         REQUIRE(accel.x < 0.f);
         REQUIRE(accel.y == Approx(0.f));
-    }
-
-    SECTION("smaller mass doesn't affect acceleration")
-    {
-        sf::Vector2f pos1 = {0.f, 0.f};
-        sf::Vector2f pos2 = {100.f, 0.f};
-
-        sf::Vector2f accel1 = gravity(pos1, pos2, 1.f, 1000.f);
-        sf::Vector2f accel2 = gravity(pos1, pos2, 100.f, 1000.f);
-
-        // Acceleration should be the same regardless of smaller mass
-        REQUIRE(accel1.x == Approx(accel2.x));
-        REQUIRE(accel1.y == Approx(accel2.y));
     }
 
     SECTION("inverse square law")
@@ -320,8 +307,8 @@ TEST_CASE("gravity calculates correct acceleration", "[gravity]")
         sf::Vector2f bigger1 = {100.f, 0.f};
         sf::Vector2f bigger2 = {200.f, 0.f};
 
-        sf::Vector2f accel1 = gravity(smaller, bigger1, 1.f, 1000.f);
-        sf::Vector2f accel2 = gravity(smaller, bigger2, 1.f, 1000.f);
+        sf::Vector2f accel1 = gravity(smaller, bigger1, 1000.f);
+        sf::Vector2f accel2 = gravity(smaller, bigger2, 1000.f);
 
         float mag1 = std::sqrt(accel1.x * accel1.x + accel1.y * accel1.y);
         float mag2 = std::sqrt(accel2.x * accel2.x + accel2.y * accel2.y);
@@ -334,7 +321,7 @@ TEST_CASE("gravity calculates correct acceleration", "[gravity]")
     {
         sf::Vector2f smaller = {0.f, 0.f};
         sf::Vector2f bigger = {10.f, 0.f}; // distance < 20
-        sf::Vector2f accel = gravity(smaller, bigger, 1.f, 1000.f);
+        sf::Vector2f accel = gravity(smaller, bigger, 1000.f);
 
         REQUIRE(accel.x == 0.f);
         REQUIRE(accel.y == 0.f);
@@ -344,7 +331,7 @@ TEST_CASE("gravity calculates correct acceleration", "[gravity]")
     {
         sf::Vector2f smaller = {0.f, 0.f};
         sf::Vector2f bigger = {21.f, 0.f}; // distance > 20
-        sf::Vector2f accel = gravity(smaller, bigger, 1.f, 1000.f);
+        sf::Vector2f accel = gravity(smaller, bigger, 1000.f);
 
         // Should have non-zero acceleration
         REQUIRE(accel.x > 0.f);
@@ -444,47 +431,47 @@ TEST_CASE("orbitalVelocity calculates correct velocity", "[orbitalVelocity]")
         REQUIRE(magnitude > 0.f);
     }
 
-    SECTION("orbit direction is clockwise")
+    SECTION("orbit direction is counterclockwise")
     {
-        // Object to the right should get positive y velocity
+        // Object to the right should get negative y velocity
         sf::Vector2f smaller = {100.f, 0.f};
         sf::Vector2f bigger = {0.f, 0.f};
         sf::Vector2f velocity = orbitalVelocity(smaller, bigger, 1000.f);
 
         REQUIRE(velocity.x == Approx(0.f));
-        REQUIRE(velocity.y > 0.f); // Positive y = downward in screen space = clockwise orbit
+        REQUIRE(velocity.y < 0.f); // Negative y = upward in screen space = counterclockwise orbit
     }
 
     SECTION("orbit direction verification - top position")
     {
-        // Object above center (negative y in math coords) should get positive x velocity (rightward = clockwise)
+        // Object above center (negative y in math coords) should get negative x velocity (leftward = counterclockwise)
         sf::Vector2f smaller = {0.f, -100.f}; // Above in mathematical coords
         sf::Vector2f bigger = {0.f, 0.f};
         sf::Vector2f velocity = orbitalVelocity(smaller, bigger, 1000.f);
 
-        REQUIRE(velocity.x > 0.f);
+        REQUIRE(velocity.x < 0.f);
         REQUIRE(velocity.y == Approx(0.f));
     }
 
     SECTION("orbit direction verification - left position")
     {
-        // Object to the left should get negative y velocity
+        // Object to the left should get positive y velocity
         sf::Vector2f smaller = {-100.f, 0.f};
         sf::Vector2f bigger = {0.f, 0.f};
         sf::Vector2f velocity = orbitalVelocity(smaller, bigger, 1000.f);
 
         REQUIRE(velocity.x == Approx(0.f));
-        REQUIRE(velocity.y < 0.f);
+        REQUIRE(velocity.y > 0.f);
     }
 
     SECTION("orbit direction verification - bottom position")
     {
-        // Object below center should get negative x velocity
+        // Object below center should get positive x velocity
         sf::Vector2f smaller = {0.f, 100.f};
         sf::Vector2f bigger = {0.f, 0.f};
         sf::Vector2f velocity = orbitalVelocity(smaller, bigger, 1000.f);
 
-        REQUIRE(velocity.x < 0.f);
+        REQUIRE(velocity.x > 0.f);
         REQUIRE(velocity.y == Approx(0.f));
     }
 }
