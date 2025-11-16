@@ -2,6 +2,7 @@
 #define CELESTIAL_HPP
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 class Celestial
 {
@@ -12,6 +13,7 @@ private:
     sf::Vector2f velocity;
     sf::CircleShape shape;
     sf::Color color;
+    std::vector<Celestial> satellites;
 
 public:
     // Constructor
@@ -26,8 +28,11 @@ public:
     sf::CircleShape getShape();
     sf::Vector2f getVelocity();
     sf::Vector2f getPosition();
+    float getMass();
+    std::vector<Celestial> &getSatellites();
 
     void setShapePosition();
+    void setSatellite(Celestial satellite);
 };
 
 #endif

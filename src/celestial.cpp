@@ -37,7 +37,22 @@ sf::Vector2f Celestial::getPosition()
     return position;
 }
 
+float Celestial::getMass()
+{
+    return mass;
+}
+
+std::vector<Celestial> &Celestial::getSatellites()
+{
+    return satellites;
+}
+
 void Celestial::setShapePosition()
 {
     shape.setPosition(position);
+}
+
+void Celestial::setSatellite(Celestial satellite)
+{
+    satellites.push_back(satellite);
 }

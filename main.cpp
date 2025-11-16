@@ -4,6 +4,27 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+std::vector<sf::CircleShape> accelerateSatellites(Celestial &celestial, const sf::Vector2f &celestialAcceleration, float dt)
+{
+    std::vector<sf::CircleShape> satelliteShapes;
+
+    for (Celestial &satellite : celestial.getSatellites())
+    {
+        sf::Vector2f satelliteAcceleration = gravity(satellite.getPosition(), celestial.getPosition(), satellite.getMass(), celestial.getMass());
+
+        satellite.accelerate(celestialAcceleration * dt);
+        satellite.accelerate(satelliteAcceleration * dt);
+        satellite.move(dt);
+        satellite.setShapePosition();
+
+        std::vector<sf::CircleShape> childShapes = accelerateSatellites(satellite, satelliteAcceleration, dt);
+        satelliteShapes.insert(satelliteShapes.end(), childShapes.begin(), childShapes.end());
+        satelliteShapes.push_back(satellite.getShape());
+    }
+
+    return satelliteShapes;
+}
+
 int main()
 {
     int windowWidth = 800;
@@ -40,6 +61,9 @@ int main()
     Celestial moon(moonMass, moonRadius, moonPosition, moonColor);
     moon.accelerate(planet.getVelocity() + orbitalVelocity(moonPosition, planetPosition, planetMass));
 
+    planet.setSatellite(moon);
+    star.setSatellite(planet);
+
     while (window.isOpen())
     {
         float currentTime = clock.getElapsedTime().asSeconds();
@@ -67,27 +91,16 @@ int main()
             }
         }
 
-        planetPosition = planet.getPosition();
-        moonPosition = moon.getPosition();
-
-        sf::Vector2f planetAcceleration = gravity(planetPosition, starPosition, 1.f, starMass);
-        planet.accelerate(planetAcceleration * dt);
-        planet.move(dt);
-
-        sf::Vector2f moonAcceleration = gravity(moonPosition, planet.getPosition(), moonMass, planetMass);
-
-        moon.accelerate(planetAcceleration * dt);
-        moon.accelerate(moonAcceleration * dt);
-        moon.move(dt);
-
-        planet.setShapePosition();
-        moon.setShapePosition();
+        std::vector<sf::CircleShape> shapes = accelerateSatellites(star, sf::Vector2f{0, 0}, dt);
 
         window.clear();
 
         window.draw(star.getShape());
-        window.draw(planet.getShape());
-        window.draw(moon.getShape());
+
+        for (sf::CircleShape shape : shapes)
+        {
+            window.draw(shape);
+        }
 
         window.display();
     }
